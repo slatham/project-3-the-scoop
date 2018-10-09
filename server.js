@@ -2,6 +2,8 @@
 let database = {
   users: {},
   articles: {},
+  comments: {},
+  nextCommentId: 1,
   nextArticleId: 1
 };
 
@@ -26,8 +28,37 @@ const routes = {
   },
   '/articles/:id/downvote': {
     'PUT': downvoteArticle
+  },
+  '/comments': {
+    'POST': createComment
+
+  },
+  '/comments/:id': {
+
+  },
+  '/comments/:id/upvote': {
+
+  },
+  '/comments/:id/downvote': {
+
   }
 };
+
+
+/* ------------- Comment functionality - added by SL -------------- */
+
+
+function createComment (url,body) {
+
+};
+
+
+
+
+/* ------------------------------------------------------------------ */
+
+
+
 
 function getUser(url, request) {
   const username = url.split('/').filter(segment => segment)[1];
@@ -113,30 +144,49 @@ function getArticle(url, request) {
 }
 
 function createArticle(url, request) {
+debugger;
+  // see short circuit evalucation https://mzl.la/2OKhoKJ
+  // basically if (false) && (something), the something never
+  // gets evaluated becuase the first part of the AND is false.
+  // in this case if request.body is not set, request.body.article
+  // definitly won't be set!  requestArticle is set to the 2nd
+  // half as that's where the short circuit ends.  If request.body
+  // was undefined, then becuasse it is an AND, the short-circuit will
+  // be on the first half -- so requestArticle will be set to undefined.
   const requestArticle = request.body && request.body.article;
+  // define a response object that we'll be returning later
   const response = {};
-
+  // check we have a request article, then the properties of requestArticle are set
   if (requestArticle && requestArticle.title && requestArticle.url &&
       requestArticle.username && database.users[requestArticle.username]) {
+    // crate an article object to save to the articles object / database
     const article = {
-      id: database.nextArticleId++,
-      title: requestArticle.title,
+      id: database.nextArticleId++, // set id to an increment of database.nextArticleId 
+      title: requestArticle.title,  // define the rest of the properties of the article
       url: requestArticle.url,
       username: requestArticle.username,
-      commentIds: [],
-      upvotedBy: [],
-      downvotedBy: []
+      commentIds: [],               // can't have any comments yet - the article doesn't even exit
+      upvotedBy: [],                // no one can upvote the article for the same reason as above
+      downvotedBy: []               // dito as above
     };
-
+    // save the article object into the articles object
     database.articles[article.id] = article;
+    // Link the article to the user by saving the incremented article id 
+    // to the articleIds array that each user has in the users database object
     database.users[article.username].articleIds.push(article.id);
 
+    // next set up the response to send back to the user
+    // in this case, send back the article that was saved as 
+    // the body
     response.body = {article: article};
+    // because everything went well, set the status to 201
     response.status = 201;
   } else {
+    // there was an issue so send back the code 400
     response.status = 400;
   }
 
+  // return back the response
   return response;
 }
 
