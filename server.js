@@ -47,10 +47,52 @@ const routes = {
 
 /* ------------- Comment functionality - added by SL -------------- */
 
+function createComment (url,request) {
 
-function createComment (url,body) {
+//debugger;
+  // Using short-circuit logic, assign request.body.comment to 
+  // requestComment if there's a request.body
+  const requestComment = request.body && request.body.comment;
+  // define an object to hold the response
+  const response = {};
+  // if requestComment, articleId, username is not undefined and the user exists in 
+  // the users object on the database
+  if (requestComment && requestComment.body && requestComment.articleId && database.articles[requestComment.articleId] && requestComment.username 
+                                 && database.users[requestComment.username]) {
+    // crate a comment object to save to the comments object / database
+    const comment = {
+      id: database.nextCommentId++, // set id to an increment of database.nextCommentId 
+      body: requestComment.body,  // define the rest of the properties of the comment
+      articleId: requestComment.articleId,
+      username: requestComment.username,
+      upvotedBy: [],                // no one can upvote the comment as it doesn't exist yet
+      downvotedBy: []               // as above
+    };
+    // save the article object into the articles object
+    database.comments[comment.id] = comment;
+    // Link the article to the user by saving the incremented article id 
+    // to the articleIds array that each user has in the users database object
+    database.users[comment.username].commentIds.push(comment.id);
+
+    database.articles[comment.articleId].commentIds.push(comment.id)
+
+    // next set up the response to send back to the user
+    // in this case, send back the article that was saved as 
+    // the body
+    response.body = {comment: comment};
+    // because everything went well, set the status to 201
+    response.status = 201;
+  } else {
+    // there was an issue so send back the code 400
+    response.status = 400;
+  }
+
+  // return back the response
+  return response;
+
 
 };
+
 
 
 
@@ -144,7 +186,7 @@ function getArticle(url, request) {
 }
 
 function createArticle(url, request) {
-debugger;
+
   // see short circuit evalucation https://mzl.la/2OKhoKJ
   // basically if (false) && (something), the something never
   // gets evaluated becuase the first part of the AND is false.
