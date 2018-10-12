@@ -23,6 +23,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node --inspect server.js"
+    "testdbg":"mocha --inspect-brk",
+    "startdbg": "node --inspect server.js",
+    "start":"node server.js"
   }
 }

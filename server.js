@@ -48,8 +48,6 @@ const routes = {
 /* ------------- Comment functionality - added by SL -------------- */
 
 function createComment (url,request) {
-
-//debugger;
   // Using short-circuit logic, assign request.body.comment to 
   // requestComment if there's a request.body
   const requestComment = request.body && request.body.comment;
@@ -233,6 +231,7 @@ function createArticle(url, request) {
 }
 
 function updateArticle(url, request) {
+debugger
   const id = Number(url.split('/').filter(segment => segment)[1]);
   const savedArticle = database.articles[id];
   const requestArticle = request.body && request.body.article;
