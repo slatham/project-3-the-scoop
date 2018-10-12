@@ -30,7 +30,8 @@ const routes = {
     'PUT': downvoteArticle
   },
   '/comments': {
-    'POST': createComment
+    'POST': createComment,
+    //'PUT' : updateComment
 
   },
   '/comments/:id': {
@@ -185,7 +186,7 @@ function getArticle(url, request) {
 
 function createArticle(url, request) {
 
-  // see short circuit evalucation https://mzl.la/2OKhoKJ
+  // see short circuit evaluation https://mzl.la/2OKhoKJ
   // basically if (false) && (something), the something never
   // gets evaluated becuase the first part of the AND is false.
   // in this case if request.body is not set, request.body.article
@@ -231,17 +232,32 @@ function createArticle(url, request) {
 }
 
 function updateArticle(url, request) {
-debugger
+debugger;
+  // get the id of the article to update by parsing the url string
+  // split the url string on the forward slash.  The result is an array of three elements
+  // then filter the array to remove the blank first element
+  // assign id to the second element of the resulting filtered array
+  // in this case, the number of the article.
   const id = Number(url.split('/').filter(segment => segment)[1]);
+  // get the saved article that is saved in the database object
+  // using the id we extracted in the last step
   const savedArticle = database.articles[id];
+  // using short-circuit evalucation assign the article text to the
+  // variable requestArticle
   const requestArticle = request.body && request.body.article;
+  // define the response object we'll be sending back
   const response = {};
 
+  // if id or requestArticle are not set
+  // send the 400 status code
   if (!id || !requestArticle) {
     response.status = 400;
+    // else if the article is not found, send back a 404 error
   } else if (!savedArticle) {
     response.status = 404;
   } else {
+    // else everything is ok 
+    // now 
     savedArticle.title = requestArticle.title || savedArticle.title;
     savedArticle.url = requestArticle.url || savedArticle.url;
 
