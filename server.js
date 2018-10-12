@@ -30,11 +30,12 @@ const routes = {
     'PUT': downvoteArticle
   },
   '/comments': {
-    'POST': createComment,
-    //'PUT' : updateComment
+    'POST': createComment
+    
 
   },
   '/comments/:id': {
+    'PUT' : updateComment
 
   },
   '/comments/:id/upvote': {
@@ -91,6 +92,44 @@ function createComment (url,request) {
 
 
 };
+
+function updateComment(url,request) {
+
+  // get the id of the comment from the url by
+  // splitting on the forward slash, this gives you a 3 element array
+  // choose the last element.
+  const id = Number(url.split('/')[2]);
+  // assign the actual comment by using the id above to select it
+  // from the comments object (in the database object) 
+  // assign it as savedComment
+  const savedComment = database.comments[id];
+  // use short circuit evalucation to assign the comment text to 
+  // the variable requestComment (if request.body is set)
+  const requestComment = request.body && request.body.comment;
+  // define an object to return
+  const response = {};
+  // check that we have a valid id and comment
+  // if not this is a bad request and return 400
+  if (!id || !requestComment) {
+    response.status = 400; 
+  // check if the id supplied matches a saved comment in the database
+  // object.  If not found, return a 404.  
+  } else if (!savedComment) {
+    response.status = 404;
+  } else {
+    // else everything is good, use short circuit evalucation to assign
+    // the new comment from the request, or just set it back to
+    // the origonal
+    savedComment.body = requestComment.body || savedComment.body;
+   
+    // set up the response object and code ready to be returned
+    response.body = {comment: savedComment};
+    response.status = 200;
+  }
+  // return the response
+  return response;
+
+}
 
 
 
@@ -232,7 +271,7 @@ function createArticle(url, request) {
 }
 
 function updateArticle(url, request) {
-debugger;
+//debugger;
   // get the id of the article to update by parsing the url string
   // split the url string on the forward slash.  The result is an array of three elements
   // then filter the array to remove the blank first element
@@ -257,14 +296,23 @@ debugger;
     response.status = 404;
   } else {
     // else everything is ok 
-    // now 
+    // now, if the request contains a title use short circuit evaluation to set it
+    // if the request doesn't contain a title, set it back to the origonal, for example.
+    // same with the url.  This stops the user deleting one of the inputs while editing the other.
+    // Unlike before the Short Circuit is an OR statement, so if the first half is false it'll try the next 
+    // until it short circuits.  If it was an AND it'd short circuit on the first item if it was false.  That's
+    // becuase false and (anything) will always be false, no point in even trything the next item.
     savedArticle.title = requestArticle.title || savedArticle.title;
     savedArticle.url = requestArticle.url || savedArticle.url;
+    // Note the above is actuallly saving the title and url to the database object becuase we set savedArticle
+    // equal to one of the saved articles with the line 'const savedArticle = database.articles[id];'
 
+
+    // set the response body and status code ready to be returned back
     response.body = {article: savedArticle};
     response.status = 200;
   }
-
+  //return the response
   return response;
 }
 
