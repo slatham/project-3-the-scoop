@@ -492,6 +492,7 @@ function upvote(item, username) {
   return item;
 }
 
+// see comments for the upvote function
 function downvote(item, username) {
   if (item.upvotedBy.includes(username)) {
     item.upvotedBy.splice(item.upvotedBy.indexOf(username), 1);
