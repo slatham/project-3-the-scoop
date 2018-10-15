@@ -452,20 +452,29 @@ function upvoteArticle(url, request) {
 }
 
 function downvoteArticle(url, request) {
+  // get the id from the url sting as before
   const id = Number(url.split('/').filter(segment => segment)[1]);
+  // using short circuit eval, assign the username from the request
   const username = request.body && request.body.username;
+  // let (becuase we'll be changing it later) savedArticle equal the 
+  // saved article in the database object, within the articles object.
   let savedArticle = database.articles[id];
+  // initialise the response object
   const response = {};
-
+  // check if there is actually a svaed article at that id
+  // and that the users in the request is in the users object
   if (savedArticle && database.users[username]) {
+    // if so, run the downvote helper function passing the savedArticle and
+    // username.  Then assigning the new updated article to savedArticle
     savedArticle = downvote(savedArticle, username);
 
+    // assign the response body and status code ready to be returned
     response.body = {article: savedArticle};
     response.status = 200;
   } else {
     response.status = 400;
   }
-
+  // return the response
   return response;
 }
 
