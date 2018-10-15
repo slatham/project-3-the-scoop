@@ -394,20 +394,31 @@ function deleteArticle(url, request) {
 }
 
 function upvoteArticle(url, request) {
+  debugger
+  // get the id from the url as done in other functions
   const id = Number(url.split('/').filter(segment => segment)[1]);
+  // SHort circuit eval to assign the username similar to before
   const username = request.body && request.body.username;
+  // get and assign the article using the id we extracted
   let savedArticle = database.articles[id];
+  // set up our response object
   const response = {};
-
+  // if the id of the article was a valid one in the articles object
+  // and the username sent in the request exists in the users database object
   if (savedArticle && database.users[username]) {
+    // run the upvote helper function passing it the article and 
+    // username of the person upvoting it
     savedArticle = upvote(savedArticle, username);
-
+    // set the body of the response to the altered article
+    // after the upvote has been processed
     response.body = {article: savedArticle};
+    // set the status code to ok
     response.status = 200;
   } else {
+    // there must be an issue, set the status code accordingly
     response.status = 400;
   }
-
+  // return the response
   return response;
 }
 
@@ -430,12 +441,16 @@ function downvoteArticle(url, request) {
 }
 
 function upvote(item, username) {
+  // if the person has already downvoted the article, deal with that first
   if (item.downvotedBy.includes(username)) {
+    // remove the downvote
     item.downvotedBy.splice(item.downvotedBy.indexOf(username), 1);
   }
+  // if they haven't already upvoted, add them to the upvotedBy array
   if (!item.upvotedBy.includes(username)) {
     item.upvotedBy.push(username);
   }
+  // return item (either article or comment array) back
   return item;
 }
 
