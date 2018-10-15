@@ -1,0 +1,105 @@
+users:
+  ste:
+    username: ste
+    articleIds:
+      - 1
+    commentIds:
+      - 1
+      - 2
+  sarah:
+    username: sarah
+    articleIds:
+      - 3
+    commentIds:
+      - 3
+  jane:
+    username: jane
+    articleIds:
+      - 4
+    commentIds: []
+  Steve:
+    username: Steve
+    articleIds: []
+    commentIds:
+      - 4
+      - 5
+articles:
+  '1':
+    id: 1
+    title: test
+    url: test123
+    username: ste
+    commentIds:
+      - 1
+      - 2
+      - 3
+      - 5
+    upvotedBy:
+      - ste
+      - Steve
+    downvotedBy: []
+    comments:
+      - &ref_0
+        id: 1
+        body: testing123
+        articleId: 1
+        username: ste
+        upvotedBy:
+          - ste
+        downvotedBy: []
+      - &ref_1
+        id: 2
+        body: another test
+        articleId: 1
+        username: ste
+        upvotedBy: []
+        downvotedBy: []
+      - &ref_2
+        id: 3
+        body: Good job
+        articleId: 1
+        username: sarah
+        upvotedBy: []
+        downvotedBy: []
+  '2': null
+  '3':
+    id: 3
+    title: another post
+    url: test
+    username: sarah
+    commentIds: []
+    upvotedBy:
+      - Steve
+    downvotedBy: []
+  '4':
+    id: 4
+    title: great news article
+    url: Range123
+    username: jane
+    commentIds:
+      - 4
+    upvotedBy:
+      - Steve
+    downvotedBy: []
+    comments: []
+comments:
+  '1': *ref_0
+  '2': *ref_1
+  '3': *ref_2
+  '4':
+    id: 4
+    body: Good post!
+    articleId: 4
+    username: Steve
+    upvotedBy:
+      - Steve
+    downvotedBy: []
+  '5':
+    id: 5
+    body: Rubbish
+    articleId: 1
+    username: Steve
+    upvotedBy: []
+    downvotedBy: []
+nextCommentId: 6
+nextArticleId: 5

@@ -1,3 +1,9 @@
+const yaml = require('js-yaml');
+const fs = require('fs');
+
+
+
+
 // database is let instead of const to allow us to modify it in test.js
 let database = {
   users: {},
@@ -6,6 +12,8 @@ let database = {
   nextCommentId: 1,
   nextArticleId: 1
 };
+
+
 
 const routes = {
   '/users': {
@@ -89,7 +97,7 @@ function createComment (url,request) {
     // there was an issue so send back the code 400
     response.status = 400;
   }
-
+  
   // return back the response
   return response;
 
@@ -226,6 +234,31 @@ function downvoteComment(url, request) {
   // return the response
   return response;
 }
+
+
+function loadDatabase () {
+
+  try {
+    const yamldb = yaml.safeLoad(fs.readFileSync('db.yaml', 'utf8'));
+    database = yamldb;    
+  } catch (e) {
+    console.log(e);
+  }
+
+}
+
+function saveDatabase () {
+
+  let yamldb = yaml.safeDump(database);
+
+  try {
+      fs.writeFile('db.yaml', yamldb, 'utf8', function() {console.log('File written!')}) 
+  } catch (e) {
+    console.log(e);
+  }
+
+}
+
 
 
 /* ------------------------------------------------------------------ */
