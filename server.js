@@ -44,6 +44,7 @@ const routes = {
 
   },
   '/comments/:id/downvote': {
+    'PUT' : downvoteComment
 
   }
 };
@@ -182,6 +183,37 @@ function upvoteComment(url, request) {
     // username of the person upvoting it.  Update the savedComment variable
     // with the new altered comment.
     savedComment = upvote(savedComment, username);
+    // set the body of the response to the altered comment
+    // after the upvote has been processed
+    response.body = {comment: savedComment};
+    // set the status code to ok
+    response.status = 200;
+  } else {
+    // there must be an issue, set the status code accordingly
+    response.status = 400;
+  }
+  // return the response
+  return response;
+}
+
+
+function downvoteComment(url, request) {
+  debugger
+  // get the id from the url as done in other functions
+  const id = Number(url.split('/').filter(segment => segment)[1]);
+  // SHort circuit eval to assign the username similar to before
+  const username = request.body && request.body.username;
+  // get and assign the comment using the id we extracted
+  let savedComment = database.comments[id];
+  // set up our response object
+  const response = {};
+  // if the id of the comment was a valid one in the comments object
+  // and the username sent in the request exists in the users database object
+  if (savedComment && database.users[username]) {
+    // run the upvote helper function passing it the comment and 
+    // username of the person upvoting it.  Update the savedComment variable
+    // with the new altered comment.
+    savedComment = downvote(savedComment, username);
     // set the body of the response to the altered comment
     // after the upvote has been processed
     response.body = {comment: savedComment};
