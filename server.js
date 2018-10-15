@@ -35,7 +35,8 @@ const routes = {
 
   },
   '/comments/:id': {
-    'PUT' : updateComment
+    'PUT' : updateComment,
+    'DELETE': deleteComment
 
   },
   '/comments/:id/upvote': {
@@ -131,6 +132,37 @@ function updateComment(url,request) {
 
 }
 
+function deleteComment(url, request) {
+  // gets the id in the same way as updateComment
+  const id = Number(url.split('/').filter(segment => segment)[1]);
+  // assigns the saved comment to the variable saveedComment
+  const savedComment = database.comments[id];
+  // gets the response ready by initialising it
+  const response = {};
+
+  // if there is a comment at that id
+  if (savedComment) {
+    // set it to null - i.e. delete it from the 
+    // database comments object
+    database.comments[id] = null;
+    // next we want to remove the comments id from the article object
+    // first get all the comment ids on the article this comment was attached to
+    const articleCommentIds = database.articles[savedComment.articleId].commentIds;
+    // then remove the comment id from the articles object
+    articleCommentIds.splice(articleCommentIds.indexOf(id),1);
+    // get the commentIds array from the user object for the user that created this comment
+    const userCommentIds = database.users[savedComment.username].commentIds;
+    // alter the array by splicing it from the indexOf our comment on that 1 element only
+    userCommentIds.splice(userCommentIds.indexOf(id), 1);
+    // set the the status code
+    response.status = 204;
+  } else {
+    // something went wrong, set the status code
+    response.status = 404;
+  }
+  // return the status code
+  return response;
+}
 
 
 
@@ -317,25 +349,47 @@ function updateArticle(url, request) {
 }
 
 function deleteArticle(url, request) {
+  debugger
+  // gets the id in the same way as updateArticle 
   const id = Number(url.split('/').filter(segment => segment)[1]);
+  // assigns the saved article to a variable
   const savedArticle = database.articles[id];
+  // gets the response ready by initialising it
   const response = {};
 
+  // if there is an article at that id
   if (savedArticle) {
+    // set it to null - i.e. delete it from the 
+    // database object
     database.articles[id] = null;
+    // next we remove all the comments for that article
     savedArticle.commentIds.forEach(commentId => {
+      // for each comment on that article,
       const comment = database.comments[commentId];
+      // delete it from the comments object
       database.comments[commentId] = null;
+      // next we need to remove the comment ids from the users object
+      // specifically the commentIds array
+      // assign a variable to hold the commentIds array
       const userCommentIds = database.users[comment.username].commentIds;
+      // next, use indexOf to get the index of the comment given the id
+      // then use splice to rempve the element from the index of the comment to
+      // just 1.  I.e. remove the 1 element starting at the comment.
       userCommentIds.splice(userCommentIds.indexOf(id), 1);
     });
+    // get the array of all articles from the users object
     const userArticleIds = database.users[savedArticle.username].articleIds;
+    // use splice to alter the array.  Use indexOf to the get the index of the article
+    // given the article's id, then use splice to remove 1 element starting at that point
+    // i.e. delete the article from the users object
     userArticleIds.splice(userArticleIds.indexOf(id), 1);
+    // set the the status code
     response.status = 204;
   } else {
+    // something went wrong, set the status code
     response.status = 400;
   }
-
+  // return the status code
   return response;
 }
 
