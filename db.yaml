@@ -1,105 +1,286 @@
 users:
   ste:
     username: ste
-    articleIds:
-      - 1
-    commentIds:
-      - 1
-      - 2
+    articleIds: []
+    commentIds: []
   sarah:
     username: sarah
     articleIds:
-      - 3
+      - 8
+      - 9
+      - 10
     commentIds:
-      - 3
+      - 15
+      - 16
   jane:
     username: jane
-    articleIds:
-      - 4
+    articleIds: []
     commentIds: []
   Steve:
     username: Steve
     articleIds: []
-    commentIds:
-      - 4
+    commentIds: []
+  steve:
+    username: steve
+    articleIds:
       - 5
+      - 6
+      - 7
+    commentIds:
+      - 6
+      - 7
+      - 8
+      - 17
+      - 18
+      - 19
+  betty:
+    username: betty
+    articleIds:
+      - 11
+      - 12
+    commentIds:
+      - 9
+      - 10
+      - 11
+      - 12
+      - 13
+      - 14
 articles:
-  '1':
-    id: 1
-    title: test
-    url: test123
-    username: ste
+  '1': null
+  '2': null
+  '3': null
+  '4': null
+  '5':
+    id: 5
+    title: Playstation problems
+    url: >-
+      https://news.google.com/articles/CBMibWh0dHBzOi8vd3d3LmV1cm9nYW1lci5uZXQvYXJ0aWNsZXMvMjAxOC0xMC0xNi1wbGF5c3RhdGlvbi1zYXlzLWl0cy1maXhlZC1tZXNzYWdlcy10aGF0LXdlcmUtY3Jhc2hpbmctY29uc29sZXPSAbIBaHR0cHM6Ly93d3ctZXVyb2dhbWVyLW5ldC5jZG4uYW1wcHJvamVjdC5vcmcvdi9zL3d3dy5ldXJvZ2FtZXIubmV0L2FtcC8yMDE4LTEwLTE2LXBsYXlzdGF0aW9uLXNheXMtaXRzLWZpeGVkLW1lc3NhZ2VzLXRoYXQtd2VyZS1jcmFzaGluZy1jb25zb2xlcz9hbXBfanNfdj0wLjEjd2Vidmlldz0xJmNhcD1zd2lwZQ?hl=en-GB&gl=GB&ceid=GB%3Aen
+    username: steve
     commentIds:
-      - 1
-      - 2
-      - 3
-      - 5
+      - 7
+      - 12
     upvotedBy:
-      - ste
-      - Steve
+      - steve
+      - sarah
+      - betty
+    downvotedBy: []
+    comments:
+      - &ref_1
+        id: 7
+        body: The Xbox is better anyway
+        articleId: 5
+        username: steve
+        upvotedBy: []
+        downvotedBy:
+          - betty
+  '6':
+    id: 6
+    title: Microsoft Surface Pro 6
+    url: >-
+      https://news.google.com/articles/CAIiEOzzzhx_fgKXDEs3uH-70goqFggEKg4IACoGCAow3O8nMMqOBjD38Ak?hl=en-GB&gl=GB&ceid=GB%3Aen
+    username: steve
+    commentIds:
+      - 8
+      - 13
+      - 16
+    upvotedBy:
+      - steve
+    downvotedBy:
+      - sarah
+      - betty
+    comments:
+      - &ref_2
+        id: 8
+        body: Nice!
+        articleId: 6
+        username: steve
+        upvotedBy:
+          - betty
+          - sarah
+        downvotedBy: []
+      - &ref_4
+        id: 13
+        body: I want one.
+        articleId: 6
+        username: betty
+        upvotedBy:
+          - betty
+        downvotedBy: []
+  '7':
+    id: 7
+    title: Windows 10 Creators Update
+    url: >-
+      https://news.google.com/articles/CBMiRWh0dHBzOi8vd3d3LnRoZXJlZ2lzdGVyLmNvLnVrLzIwMTgvMTAvMTYvbWljcm9zb2Z0X3JvdW5kdXBfbWluZWNyYWZ0L9IBlwFodHRwczovL3d3dy10aGVyZWdpc3Rlci1jby11ay5jZG4uYW1wcHJvamVjdC5vcmcvdi9zL3d3dy50aGVyZWdpc3Rlci5jby51ay9BTVAvMjAxOC8xMC8xNi9taWNyb3NvZnRfcm91bmR1cF9taW5lY3JhZnQvP2FtcF9qc192PTAuMSN3ZWJ2aWV3PTEmY2FwPXN3aXBl?hl=en-GB&gl=GB&ceid=GB%3Aen
+    username: steve
+    commentIds:
+      - 6
+      - 14
+    upvotedBy:
+      - steve
+      - sarah
     downvotedBy: []
     comments:
       - &ref_0
-        id: 1
-        body: testing123
-        articleId: 1
-        username: ste
+        id: 6
+        body: I hate Windows updates!
+        articleId: 7
+        username: steve
         upvotedBy:
-          - ste
+          - betty
         downvotedBy: []
-      - &ref_1
-        id: 2
-        body: another test
-        articleId: 1
-        username: ste
-        upvotedBy: []
-        downvotedBy: []
-      - &ref_2
-        id: 3
-        body: Good job
-        articleId: 1
-        username: sarah
-        upvotedBy: []
-        downvotedBy: []
-  '2': null
-  '3':
-    id: 3
-    title: another post
-    url: test
+  '8':
+    id: 8
+    title: Prince Harry news
+    url: >-
+      https://news.google.com/articles/CBMif2h0dHBzOi8vd3d3LnRoZXRpbWVzLmNvLnVrL2FydGljbGUvcHJpbmNlLWhhcnJ5LWFuZC1tZWdoYW4tbWFya2xlLXNob3dlcmVkLXdpdGgtZ2lmdHMtb24tZmlyc3QtZGF5LW9mLWF1c3RyYWxpYW4tdG91ci10enJzcTBncnLSAQA?hl=en-GB&gl=GB&ceid=GB%3Aen
     username: sarah
-    commentIds: []
-    upvotedBy:
-      - Steve
-    downvotedBy: []
-  '4':
-    id: 4
-    title: great news article
-    url: Range123
-    username: jane
     commentIds:
-      - 4
+      - 11
     upvotedBy:
-      - Steve
+      - sarah
+      - betty
     downvotedBy: []
     comments: []
-comments:
-  '1': *ref_0
-  '2': *ref_1
-  '3': *ref_2
-  '4':
-    id: 4
-    body: Good post!
-    articleId: 4
-    username: Steve
+  '9':
+    id: 9
+    title: Will Smith News
+    url: >-
+      https://news.google.com/articles/CAIiEKkzBiBwgbUtUKERXXy5f8MqGAgEKg8IACoHCAowqa6gCTCuoHAw2faJAw?hl=en-GB&gl=GB&ceid=GB%3Aen
+    username: sarah
+    commentIds:
+      - 10
     upvotedBy:
-      - Steve
+      - sarah
     downvotedBy: []
-  '5':
-    id: 5
-    body: Rubbish
-    articleId: 1
-    username: Steve
+    comments: []
+  '10':
+    id: 10
+    title: Doctor Who is back
+    url: >-
+      https://news.google.com/articles/CBMia2h0dHA6Ly93d3cuZGlnaXRhbHNweS5jb20vdHYvZG9jdG9yLXdoby9uZXdzL2E4Njg0MzYvZG9jdG9yLXdoby1zZXJpZXMtMTEtZXBpc29kZS0yLXJhdGluZ3MtZ2hvc3QtbW9udW1lbnQv0gEA?hl=en-GB&gl=GB&ceid=GB%3Aen
+    username: sarah
+    commentIds:
+      - 9
+      - 15
+      - 19
+    upvotedBy:
+      - sarah
+      - betty
+    downvotedBy: []
+    comments:
+      - &ref_3
+        id: 9
+        body: Yay!
+        articleId: 10
+        username: betty
+        upvotedBy:
+          - sarah
+        downvotedBy: []
+      - &ref_5
+        id: 15
+        body: New Doctor
+        articleId: 10
+        username: sarah
+        upvotedBy:
+          - sarah
+        downvotedBy: []
+  '11':
+    id: 11
+    title: Climate Change
+    url: >-
+      https://news.google.com/articles/CAIiEL2Q3VqL3o95L-PR7-w74G0qFggEKg4IACoGCAowl6p7MN-zCTCtvxU?hl=en-GB&gl=GB&ceid=GB%3Aen
+    username: betty
+    commentIds:
+      - 18
+    upvotedBy:
+      - betty
+      - steve
+    downvotedBy: []
+    comments: []
+  '12':
+    id: 12
+    title: Brexit
+    url: >-
+      https://news.sky.com/story/theresa-may-told-to-take-responsibility-for-brexit-talks-stalling-11527050
+    username: betty
+    commentIds:
+      - 17
+    upvotedBy: []
+    downvotedBy:
+      - steve
+    comments: []
+comments:
+  '1': null
+  '2': null
+  '3': null
+  '4': null
+  '5': null
+  '6': *ref_0
+  '7': *ref_1
+  '8': *ref_2
+  '9': *ref_3
+  '10':
+    id: 10
+    body: I loved The Fresh Prince!
+    articleId: 9
+    username: betty
     upvotedBy: []
     downvotedBy: []
-nextCommentId: 6
-nextArticleId: 5
+  '11':
+    id: 11
+    body: Not interested!
+    articleId: 8
+    username: betty
+    upvotedBy: []
+    downvotedBy: []
+  '12':
+    id: 12
+    body: Playstation rules!
+    articleId: 5
+    username: betty
+    upvotedBy:
+      - betty
+    downvotedBy: []
+  '13': *ref_4
+  '14':
+    id: 14
+    body: I still use Windows XP - with no service packs!
+    articleId: 7
+    username: betty
+    upvotedBy: []
+    downvotedBy:
+      - betty
+  '15': *ref_5
+  '16':
+    id: 16
+    body: Christmas idea!
+    articleId: 6
+    username: sarah
+    upvotedBy:
+      - sarah
+    downvotedBy: []
+  '17':
+    id: 17
+    body: No more news on Brexit!
+    articleId: 12
+    username: steve
+    upvotedBy:
+      - steve
+    downvotedBy: []
+  '18':
+    id: 18
+    body: Better start living on boats!
+    articleId: 11
+    username: steve
+    upvotedBy:
+      - steve
+    downvotedBy: []
+  '19':
+    id: 19
+    body: Never watched it
+    articleId: 10
+    username: steve
+    upvotedBy: []
+    downvotedBy: []
+nextCommentId: 20
+nextArticleId: 13
