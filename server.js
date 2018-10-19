@@ -1,8 +1,6 @@
+// needed to support persistence of data via YAML.
 const yaml = require('js-yaml');
 const fs = require('fs');
-
-
-
 
 // database is let instead of const to allow us to modify it in test.js
 let database = {
@@ -14,7 +12,7 @@ let database = {
 };
 
 
-
+// object for each of the routes the app uses
 const routes = {
   '/users': {
     'POST': getOrCreateUser
@@ -39,8 +37,6 @@ const routes = {
   },
   '/comments': {
     'POST': createComment
-    
-
   },
   '/comments/:id': {
     'PUT' : updateComment,
@@ -49,16 +45,14 @@ const routes = {
   },
   '/comments/:id/upvote': {
     'PUT' : upvoteComment
-
   },
   '/comments/:id/downvote': {
     'PUT' : downvoteComment
-
   }
 };
 
 
-/* ------------- Comment functionality - added by SL -------------- */
+/* ------------- The Comment functionality - added by SL -------------- */
 
 function createComment (url,request) {
   // Using short-circuit logic, assign request.body.comment to 
@@ -70,25 +64,25 @@ function createComment (url,request) {
   // the users object on the database
   if (requestComment && requestComment.body && requestComment.articleId && database.articles[requestComment.articleId] && requestComment.username 
                                  && database.users[requestComment.username]) {
-    // crate a comment object to save to the comments object / database
+    // create a comment object to save to the comments object / database
     const comment = {
-      id: database.nextCommentId++, // set id to an increment of database.nextCommentId 
-      body: requestComment.body,  // define the rest of the properties of the comment
+      id: database.nextCommentId++,         // set id to an increment of database.nextCommentId 
+      body: requestComment.body,            // define the rest of the properties of the comment
       articleId: requestComment.articleId,
       username: requestComment.username,
-      upvotedBy: [],                // no one can upvote the comment as it doesn't exist yet
-      downvotedBy: []               // as above
+      upvotedBy: [],                        // no one can upvote the comment as it doesn't exist yet
+      downvotedBy: []                       // as above, that's why it is blank
     };
-    // save the article object into the articles object
+    // save the above comments object into the database comments object
     database.comments[comment.id] = comment;
-    // Link the article to the user by saving the incremented article id 
-    // to the articleIds array that each user has in the users database object
+    // Link the comment to the user by saving the incremented comments id 
+    // to the commentIds array that each user has in the users database object
     database.users[comment.username].commentIds.push(comment.id);
-
+    // link the comment to the article in the same way as above
     database.articles[comment.articleId].commentIds.push(comment.id)
 
-    // next set up the response to send back to the user
-    // in this case, send back the article that was saved as 
+    // next, set up the response to send back to the user.
+    // In this case, send back the article that was saved as 
     // the body
     response.body = {comment: comment};
     // because everything went well, set the status to 201
@@ -101,20 +95,19 @@ function createComment (url,request) {
   // return back the response
   return response;
 
-
 };
 
 function updateComment(url,request) {
 
-  // get the id of the comment from the url by
-  // splitting on the forward slash, this gives you a 3 element array
-  // choose the last element.
+  // get the id of the comment from the URL by
+  // splitting on the forward slash, this gives you a 3 element array,
+  // then choose the last element.
   const id = Number(url.split('/')[2]);
   // assign the actual comment by using the id above to select it
   // from the comments object (in the database object) 
   // assign it as savedComment
   const savedComment = database.comments[id];
-  // use short circuit evalucation to assign the comment text to 
+  // use short circuit evaluation to assign the comment text to 
   // the variable requestComment (if request.body is set)
   const requestComment = request.body && request.body.comment;
   // define an object to return
@@ -128,9 +121,9 @@ function updateComment(url,request) {
   } else if (!savedComment) {
     response.status = 404;
   } else {
-    // else everything is good, use short circuit evalucation to assign
+    // else everything is good, use short circuit evaluation to assign
     // the new comment from the request, or just set it back to
-    // the origonal
+    // the original
     savedComment.body = requestComment.body || savedComment.body;
    
     // set up the response object and code ready to be returned
@@ -145,24 +138,24 @@ function updateComment(url,request) {
 function deleteComment(url, request) {
   // gets the id in the same way as updateComment
   const id = Number(url.split('/').filter(segment => segment)[1]);
-  // assigns the saved comment to the variable saveedComment
+  // assigns the saved comment to the variable savedComment
   const savedComment = database.comments[id];
   // gets the response ready by initialising it
   const response = {};
 
   // if there is a comment at that id
   if (savedComment) {
-    // set it to null - i.e. delete it from the 
+    // set it to null - I.e. delete it from the 
     // database comments object
     database.comments[id] = null;
-    // next we want to remove the comments id from the article object
-    // first get all the comment ids on the article this comment was attached to
+    // next we want to remove the comments id from the article object.
+    // First, get all the comment ids on the article this comment was attached to
     const articleCommentIds = database.articles[savedComment.articleId].commentIds;
-    // then remove the comment id from the articles object
+    // Next, remove the comment id from the articles object
     articleCommentIds.splice(articleCommentIds.indexOf(id),1);
-    // get the commentIds array from the user object for the user that created this comment
+    // now get the commentIds array from the user object for the user that created this comment
     const userCommentIds = database.users[savedComment.username].commentIds;
-    // alter the array by splicing it from the indexOf our comment on that 1 element only
+    // alter the array by splicing it from the indexOf our comment for 1 element only
     userCommentIds.splice(userCommentIds.indexOf(id), 1);
     // set the the status code
     response.status = 204;
@@ -175,12 +168,12 @@ function deleteComment(url, request) {
 }
 
 function upvoteComment(url, request) {
-  debugger
-  // get the id from the url as done in other functions
+
+  // get the id from the URL as done in other functions
   const id = Number(url.split('/').filter(segment => segment)[1]);
-  // SHort circuit eval to assign the username similar to before
+  // Short circuit evaluation to assign the username similar to before
   const username = request.body && request.body.username;
-  // get and assign the comment using the id we extracted
+  // get and assign the comment using the id we extracted above
   let savedComment = database.comments[id];
   // set up our response object
   const response = {};
@@ -206,10 +199,10 @@ function upvoteComment(url, request) {
 
 
 function downvoteComment(url, request) {
-  debugger
-  // get the id from the url as done in other functions
+  
+  // get the id from the URL as done in other functions
   const id = Number(url.split('/').filter(segment => segment)[1]);
-  // SHort circuit eval to assign the username similar to before
+  // Short circuit evaluation to assign the username similar to before
   const username = request.body && request.body.username;
   // get and assign the comment using the id we extracted
   let savedComment = database.comments[id];
@@ -218,12 +211,12 @@ function downvoteComment(url, request) {
   // if the id of the comment was a valid one in the comments object
   // and the username sent in the request exists in the users database object
   if (savedComment && database.users[username]) {
-    // run the upvote helper function passing it the comment and 
-    // username of the person upvoting it.  Update the savedComment variable
+    // run the downvote helper function passing it the comment and 
+    // username of the person downvoting it.  Update the savedComment variable
     // with the new altered comment.
     savedComment = downvote(savedComment, username);
     // set the body of the response to the altered comment
-    // after the upvote has been processed
+    // after the downvote has been processed
     response.body = {comment: savedComment};
     // set the status code to ok
     response.status = 200;
@@ -236,29 +229,38 @@ function downvoteComment(url, request) {
 }
 
 
+// function to load from a YAML file and populate the database object
+// defined at the top
 function loadDatabase () {
 
   try {
+    // load the database file using the YAML module and fs to access the file system 
     const yamldb = yaml.safeLoad(fs.readFileSync('db.yaml', 'utf8'));
+    // set the database object equal to what we loaded from the file
     database = yamldb;    
   } catch (e) {
+    // log any errors
     console.log(e);
   }
 
 }
 
+// function to save the database object to a file
 function saveDatabase () {
 
+  // use the yaml module to dump the database into a format ready for 
+  // writing to a file 
   let yamldb = yaml.safeDump(database);
 
   try {
+      //// use fs to write the database to the database file
       fs.writeFile('db.yaml', yamldb, 'utf8', function() {console.log('File written!')}) 
   } catch (e) {
+    // log any errors
     console.log(e);
   }
 
 }
-
 
 
 /* ------------------------------------------------------------------ */
@@ -398,8 +400,8 @@ function createArticle(url, request) {
 
 function updateArticle(url, request) {
 //debugger;
-  // get the id of the article to update by parsing the url string
-  // split the url string on the forward slash.  The result is an array of three elements
+  // get the id of the article to update by parsing the URL string
+  // split the URL string on the forward slash.  The result is an array of three elements
   // then filter the array to remove the blank first element
   // assign id to the second element of the resulting filtered array
   // in this case, the number of the article.
@@ -407,7 +409,7 @@ function updateArticle(url, request) {
   // get the saved article that is saved in the database object
   // using the id we extracted in the last step
   const savedArticle = database.articles[id];
-  // using short-circuit evalucation assign the article text to the
+  // using short-circuit evaluation assign the article text to the
   // variable requestArticle
   const requestArticle = request.body && request.body.article;
   // define the response object we'll be sending back
@@ -421,16 +423,16 @@ function updateArticle(url, request) {
   } else if (!savedArticle) {
     response.status = 404;
   } else {
-    // else everything is ok 
+    // else everything is OK 
     // now, if the request contains a title use short circuit evaluation to set it
-    // if the request doesn't contain a title, set it back to the origonal, for example.
-    // same with the url.  This stops the user deleting one of the inputs while editing the other.
+    // if the request doesn't contain a title, set it back to the original, for example.
+    // same with the URL.  This stops the user deleting one of the inputs while editing the other.
     // Unlike before the Short Circuit is an OR statement, so if the first half is false it'll try the next 
     // until it short circuits.  If it was an AND it'd short circuit on the first item if it was false.  That's
-    // becuase false and (anything) will always be false, no point in even trything the next item.
+    // becuase false and (anything) will always be false, no point in even trying the next item.
     savedArticle.title = requestArticle.title || savedArticle.title;
     savedArticle.url = requestArticle.url || savedArticle.url;
-    // Note the above is actuallly saving the title and url to the database object becuase we set savedArticle
+    // Note the above is actually saving the title and URL to the database object because we set savedArticle
     // equal to one of the saved articles with the line 'const savedArticle = database.articles[id];'
 
 
@@ -467,7 +469,7 @@ function deleteArticle(url, request) {
       // assign a variable to hold the commentIds array
       const userCommentIds = database.users[comment.username].commentIds;
       // next, use indexOf to get the index of the comment given the id
-      // then use splice to rempve the element from the index of the comment to
+      // then use splice to remove the element from the index of the comment to
       // just 1.  I.e. remove the 1 element starting at the comment.
       userCommentIds.splice(userCommentIds.indexOf(id), 1);
     });
@@ -526,7 +528,7 @@ function downvoteArticle(url, request) {
   let savedArticle = database.articles[id];
   // initialise the response object
   const response = {};
-  // check if there is actually a svaed article at that id
+  // check if there is actually a saved article at that id
   // and that the users in the request is in the users object
   if (savedArticle && database.users[username]) {
     // if so, run the downvote helper function passing the savedArticle and

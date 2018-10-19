@@ -45,6 +45,11 @@ users:
       - 12
       - 13
       - 14
+  Bob:
+    username: Bob
+    articleIds: []
+    commentIds:
+      - 20
 articles:
   '1': null
   '2': null
@@ -88,6 +93,7 @@ articles:
     downvotedBy:
       - sarah
       - betty
+      - Bob
     comments:
       - &ref_2
         id: 8
@@ -118,6 +124,7 @@ articles:
     upvotedBy:
       - steve
       - sarah
+      - Bob
     downvotedBy: []
     comments:
       - &ref_0
@@ -139,7 +146,8 @@ articles:
     upvotedBy:
       - sarah
       - betty
-    downvotedBy: []
+    downvotedBy:
+      - Bob
     comments: []
   '9':
     id: 9
@@ -166,6 +174,7 @@ articles:
     upvotedBy:
       - sarah
       - betty
+      - Bob
     downvotedBy: []
     comments:
       - &ref_3
@@ -205,10 +214,19 @@ articles:
     username: betty
     commentIds:
       - 17
+      - 20
     upvotedBy: []
     downvotedBy:
       - steve
-    comments: []
+    comments:
+      - &ref_6
+        id: 17
+        body: No more news on Brexit!
+        articleId: 12
+        username: steve
+        upvotedBy:
+          - steve
+        downvotedBy: []
 comments:
   '1': null
   '2': null
@@ -259,14 +277,7 @@ comments:
     upvotedBy:
       - sarah
     downvotedBy: []
-  '17':
-    id: 17
-    body: No more news on Brexit!
-    articleId: 12
-    username: steve
-    upvotedBy:
-      - steve
-    downvotedBy: []
+  '17': *ref_6
   '18':
     id: 18
     body: Better start living on boats!
@@ -282,5 +293,12 @@ comments:
     username: steve
     upvotedBy: []
     downvotedBy: []
-nextCommentId: 20
+  '20':
+    id: 20
+    body: Sick of this stuff!!!
+    articleId: 12
+    username: Bob
+    upvotedBy: []
+    downvotedBy: []
+nextCommentId: 21
 nextArticleId: 13
